@@ -116,7 +116,7 @@ public class WordSearcher {
 
 			for (int j = 1; j <= s.length() - i; j++) {
 				// It can be split if substring(i->j) is a dictionary word
-				// And the rest of the string (j->s.lenght) can be split
+				// And the rest of the string (j->s.length) can be split
 				// Because we work backwards on i we know that already so we can
 				// use res[i+j] from the table
 
