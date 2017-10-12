@@ -1,12 +1,15 @@
 package com.example.sort;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.DelayQueue;
 
 /** Playing with intervals, detecting overlaps and optimizing overlaps */
 public class Intervals {
@@ -148,6 +151,31 @@ public class Intervals {
 		return result.toArray(new Interval[0]);
 	}
 	
+	/** Algorithm which merges overlapping intervals into one. Assuming the intervals are sorted. 
+	 * The result is on a 'queue' of depth 1 so it can be extended if required.
+	 * 
+	 * */
+	public static Interval[] mergeAllOverlapsWithStack(Interval[] intervals) {
+
+		Deque<Interval> result = new ArrayDeque<Interval>();
+
+		for (Interval i : intervals) {
+			System.out.println(""+i);
+			Interval last = result.peekLast();
+			if (last == null || last.end < i.start) {
+				result.addLast(i);
+			} else {
+				// i.start <= last.end -- merge!
+				int max_end = last.end > i.end ? last.end : i.end;
+				last.end = max_end;
+				System.out.println(i + " overlaps with " + last + " merged as" + last);
+			}
+		}
+		
+		return result.toArray(new Interval[0]);
+	}
+	
+	
 	/** Merges an array of intervals when the array of intervals in unsorted. It does not sort the array but
 	 * uses two heaps to keep track of start & departures to generate new intervals.
 	 * 
@@ -248,7 +276,7 @@ public class Intervals {
 		int overlap2 = maxOverlapUnsorted(io);
 		System.out.println("Max without sort " + overlap2 + " overlaps");
 		
-		Interval[] merged = mergeAllOverlaps(ix);		
+		Interval[] merged = mergeAllOverlapsWithStack(ix);		
 		dump(merged);	
 		
 		Interval[] merged2 = mergeUnsorted(io);		
